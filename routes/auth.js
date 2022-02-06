@@ -2,7 +2,7 @@ const router = require('express').Router();
 const User = require('../models/User');
 const CryptoJS = require('crypto-js');
 const dotenv = require('dotenv');
-
+const jwt = require('jsonwebtoken');
 dotenv.config();
 
 const PASS_SEC = process.env.PASS_SEC;
@@ -38,10 +38,17 @@ router.post('/login', async (req, res) => {
       process.env.PASS_SEC
     );
 
-    const { password, ...others } = user;
-    req.body.password == hashedPassword.toString(CryptoJS.enc.Utf8)
-      ? res.status(200).json(others._doc)
-      : res.status(401).json('Wrong credentials!');
+    req.body.password != hashedPassword.toString(CryptoJS.enc.Utf8) &&
+      res.status(401).json('Wrong credentials!');
+
+    const accessToken = jwt.sign({
+      id: user._id,
+      isAdmin: user.isAdmin,
+    });
+
+    const { password, ...others } = user._doc;
+
+    res.status(200).json(others);
   } catch (error) {
     res.status(500).json(error);
   }
