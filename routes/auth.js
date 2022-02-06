@@ -10,6 +10,8 @@ const PASS_SEC = process.env.PASS_SEC;
 // REGISTER
 router.post('/register', async (req, res) => {
   const registerDetails = req.body;
+  const userIsAdmin = req.body.isAdmin;
+  console.log('isAdmin', req.body.isAdmin);
   const newUser = new User({
     username: registerDetails.username,
     email: registerDetails.email,
@@ -49,7 +51,6 @@ router.post('/login', async (req, res) => {
       process.env.JWT_SEC,
       { expiresIn: '3d' }
     );
-    console.log('AT: ', accessToken);
 
     const { password, ...others } = user._doc;
 
