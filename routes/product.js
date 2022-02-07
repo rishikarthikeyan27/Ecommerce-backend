@@ -40,7 +40,7 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 });
 
 // Get all products
-router.get('/', verifyTokenAndAdmin, async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const sortQuery = req.query.sort;
 
@@ -54,8 +54,8 @@ router.get('/', verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-// Get user by ID
-router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
+// Get product by ID
+router.get('/find/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
 
