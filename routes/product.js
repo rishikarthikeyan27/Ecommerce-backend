@@ -42,13 +42,25 @@ router.delete('/:id', verifyTokenAndAdmin, async (req, res) => {
 // Get all products
 router.get('/', async (req, res) => {
   try {
-    const sortQuery = req.query.sort;
+    const qNew = req.query.new;
+    const qCategory = req.query.category;
 
-    const products = sortQuery
-      ? await Product.find().sort({ _id: -1 }).limit(1)
-      : await Product.find();
+    let products;
 
-    res.status(200).json(Product);
+    // Getting 5 new products
+    if (qNew) {
+      products = await Product.find().sort({ createdAt: -1 }).limit(1);
+    } else if (qCategory) {
+      products = await Product.find({
+        categories: {
+          $in: [qCategory],
+        },
+      });
+    } else {
+      products = await Product.find();
+    }
+
+    res.status(200).json(products);
   } catch (error) {
     res.status(500).json(error);
   }
@@ -58,9 +70,9 @@ router.get('/', async (req, res) => {
 router.get('/find/:id', async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
-
-    const { password, ...others } = product._doc;
-    res.status(200).json(others);
+    product
+      ? res.status(200).json(product)
+      : res.status(404).json('No such product found');
   } catch (error) {
     res.status(500).json(error);
   }
