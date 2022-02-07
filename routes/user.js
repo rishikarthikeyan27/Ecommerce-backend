@@ -32,7 +32,7 @@ router.get('/find/:id', verifyTokenAndAdmin, async (req, res) => {
   }
 });
 
-//Update user
+// Update user
 router.put('/:id', verifyTokenAndAuthorization, async (req, res) => {
   if (req.body.password) {
     req.body.password = CryptoJS.AES.encrypt(
@@ -64,7 +64,7 @@ router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
-// GET USER STATS
+// Get user stats
 router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
   const date = new Date();
   const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
