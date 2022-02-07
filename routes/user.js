@@ -67,4 +67,28 @@ router.delete('/:id', verifyTokenAndAuthorization, async (req, res) => {
   }
 });
 
+// GET USER STATS
+router.get('/stats', verifyTokenAndAdmin, async (req, res) => {
+  const date = new Date();
+  const lastYear = new Date(date.setFullYear(date.getFullYear() - 1));
+  //gte --> greater than or equal to
+  try {
+    const data = await User.aggregate([
+      { $match: { createdAt: { $gte: lastYear } } },
+      {
+        $project: {
+          month: { $month: '$createdAt' },
+        },
+      },
+      {
+        $group: {
+          _id: '$month',
+          total: { $sum: 1 },
+        },
+      },
+    ]);
+    res.status(200).json(data);
+  } catch (error) {}
+});
+
 module.exports = router;
