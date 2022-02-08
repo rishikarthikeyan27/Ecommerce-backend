@@ -7,6 +7,7 @@ const authRoute = require('./routes/auth');
 const productRoute = require('./routes/product');
 const orderRoute = require('./routes/order');
 const cartRoute = require('./routes/cart');
+const stripeRoute = require('./routes/stripe');
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ app.use('/api/user', userRoute);
 app.use('/api/products', productRoute);
 app.use('/api/cart', cartRoute);
 app.use('/api/order', orderRoute);
+app.use('/api/checkout', stripeRoute);
 
 app.get('/', (req, res) => {
   res.json({ response: 'Yo' });
